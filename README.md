@@ -12,6 +12,11 @@ Mysql
 
 ## Installation
 
+run php artisan migrate
+run db:seed
+
+## Route List
+
 
 ## Description
 
