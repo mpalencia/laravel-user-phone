@@ -95,9 +95,9 @@ class UserController extends Controller
 
         // return response
         return fractal()
-                    ->item($user)
-                    ->transformWith(new UserTransformer)
-                    ->toArray();
+                ->item($user)
+                ->transformWith(new UserTransformer)
+                ->toArray();
     }
 
     /**
@@ -126,9 +126,9 @@ class UserController extends Controller
 
         // return response
         return fractal()
-                    ->item($user)
-                    ->transformWith(new UserTransformer)
-                    ->toArray();
+                ->item($user)
+                ->transformWith(new UserTransformer)
+                ->toArray();
     }
 
     /**
