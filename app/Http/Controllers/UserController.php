@@ -32,7 +32,6 @@ class UserController extends Controller
      * Create new user
      *
      * @param \Illuminate\Http\Request  $request
-     * @param \App\Client $client
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -59,12 +58,12 @@ class UserController extends Controller
 
         //prepare response
         $response = fractal()
-                           ->item($user)
-                           ->transformWith(new UserTransformer)
-                           ->addMeta([
-                                  'token' => $user->api_token,
-                           ])
-                           ->toArray();
+                        ->item($user)
+                        ->transformWith(new UserTransformer)
+                        ->addMeta([
+                            'token' => $user->api_token,
+                        ])
+                        ->toArray();
 
         return response()->json($response, 201);
     }
@@ -73,11 +72,11 @@ class UserController extends Controller
      * Create new user
      *
      * @param \Illuminate\Http\Request  $request
-     * @param \App\Client $client
+     * @param string $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse
     {
         $tokenCheck = $this->user->tokenBelongsToUser($request['api_token'], $id);
         if (!$tokenCheck) { 
@@ -104,11 +103,11 @@ class UserController extends Controller
      * Show user details
      *
      * @param \Illuminate\Http\Request  $request
-     * @param \App\Client $client
+     * @param string $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Request $request, $id)
+    public function show(Request $request, $id): JsonResponse
     {
         $tokenCheck = $this->user->tokenBelongsToUser($request['api_token'], $id);
         if (!$tokenCheck) { 
@@ -117,7 +116,7 @@ class UserController extends Controller
         }        
 
         try{
-            // update record and pass in only fields that are fillable
+            // get user details
             $user = $this->user->show($id);
         } catch (\Exception $e) {
             // return error response if something goes wrong
@@ -132,14 +131,14 @@ class UserController extends Controller
     }
 
     /**
-     * Create new user
+     * Delete user
      *
      * @param \Illuminate\Http\Request  $request
-     * @param \App\Client $client
+     * @param string $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, $id): JsonResponse
     {
         $tokenCheck = $this->user->tokenIsAdmin($request['api_token'], $id);
         if (!$tokenCheck) { 
