@@ -14,11 +14,20 @@ Mysql
 
 run php artisan migrate
 run db:seed
+run php artisan serve
 
 ## Route List
 
 
 ## Description
+
+
+## Assumptions
+
+Client is another entity like a user
+Client registration is publicly accessible and anyone can register
+Admin type of user and authorize client are the only authorize to create new users
+Admin type of user can fully access the client's CRUD resources
 
 Objective
 To create a simple RESTful API which will store phone numbers of a user.

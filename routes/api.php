@@ -36,8 +36,12 @@ Route::post('user-create', 'UserController@store');
 //private routes
 Route::group(['middleware' => 'token.verification'], function() {
 
-    Route::put('client-update/{client}', 'ClientController@update');
-    Route::delete('client-delete/{id}', 'ClientController@delete');
+    // clients 
+    Route::get('client/{id}', 'ClientController@show');
+    Route::put('client-update/{id}', 'ClientController@update');
+    Route::delete('client-delete/{id}', 'ClientController@destroy');
+
+    // users
     Route::get('user/{id}', 'UserController@show');
     Route::put('user-update/{id}', 'UserController@update');
     Route::delete('user-delete/{id}', 'UserController@destroy');

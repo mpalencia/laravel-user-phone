@@ -1,12 +1,11 @@
 <?php
 namespace App\Transformers;
 
-use App\Client;
 use League\Fractal\TransformerAbstract;
 
 class ClientTransformer extends TransformerAbstract
 {
-    public function transform(Client $client)
+    public function transform($client)
     {
         return [
             'id'             => $client->id,

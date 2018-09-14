@@ -2,45 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller; 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use App\Transformers\ClientTransformer;
+use App\Repositories\Interfaces\ClientInterface;
 use Validator;
-use App\Client;
 
 class ClientController extends Controller 
 {
 
-    /**
-     * The client model instance.
-     *
-     * @var \App\Client
-     */
-    protected $client;
+    /** 
+    * @var \App\Repositories\ClientInterface 
+    */
+    private $client;
 
     /**
-     * Create a client model instance.
+     * ClientController constructor.
      *
-     * @param  \App\Client  $client
-     * @return void
+     * @param App\Repositories\ClientInterface $client
      */
-    public function __construct(Client $client)
+    public function __construct( ClientInterface $client )
     {
         $this->client = $client;
     }
 
     /**
-     * Store a new client.
+     * Create new client
      *
      * @param \Illuminate\Http\Request  $request
-     * @param \App\Client $client
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request, Client $client): JsonResponse
+    public function store(Request $request): JsonResponse
     {
-
         $validator = Validator::make($request->all(), [ 
             'name'       => 'required',
             'email'       => 'required|email|unique:clients',
@@ -48,82 +43,124 @@ class ClientController extends Controller
         ]);
 
         if ($validator->fails()) { 
+            // return error response if validation failed
             return response()->json(['error'=>$validator->errors()], 401);         
         }
 
-        $client = $client->create([
-            'name'      => $request->name,
-            'email'     => $request->email,
-            'password'  => bcrypt($request->password),
-            'api_token' => bcrypt($request->email)
-        ]);
+        try{
+            // create record and pass in only fields that are fillable
+            $client = $this->client ->create($request->only($this->client ->getModel()->fillable));
+        } catch (\Exception $e) {
+            // return error response if something goes wrong
+            return response()->json(['error'=>$e->getMessage()], 422);
+        }
 
+        // prepare response
         $response = fractal()
-                           ->item($client)
-                           ->transformWith(new ClientTransformer)
-                           ->addMeta([
-                                   'token' => $client->api_token,
-                            ])
-                            ->toArray();
+                        ->item($client)
+                        ->transformWith(new ClientTransformer)
+                        ->addMeta([
+                            'token' => $client->api_token,
+                        ])
+                        ->toArray();
 
         return response()->json($response, 201);
-
     }
 
     /**
-     * Update the given client.
+     * Show client details
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $clientId
+     * @param \Illuminate\Http\Request  $request
+     * @param string $id
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $clientId): JsonResponse
+    public function show(Request $request, $id): JsonResponse
     {
-        echo 89324;
-        // $validator = Validator::make($request->all(), [
-        //     'api_token' => 'required',
-        //     'name'       => 'required',
-        //     'email'       => 'required|email|unique:clients,email,'. $clientId,
-        // ]);
+        $tokenCheck = $this->client->tokenBelongsToClient($request['api_token'], $id);
+        if (!$tokenCheck) { 
+            // return error response if token doesn't belong to client
+            return response()->json(['error'=>'Unauthorized Viewing'], 401);         
+        }        
 
-        // if ($validator->fails()) { 
-        //     return response()->json(['error'=>$validator->errors()], 401);         
-        // }
+        try{
+            // get client details
+            $client = $this->client->show($id);
+        } catch (\Exception $e) {
+            // return error response if something goes wrong
+            return response()->json(['error'=>$e->getMessage()], 422);
+        }
 
-        // return $this->clients->update(
-        //     $client, $request->name, $request->email
-        // );
+        // prepare response
+        $response = fractal()
+                        ->item($client)
+                        ->transformWith(new ClientTransformer)
+                        ->toArray();
 
+        return response()->json($response, 201);
     }
 
     /**
-     * Delete the given client.
+     * Update client
      *
-     * @param  Request  $request
-     * @param  string  $clientId
+     * @param \Illuminate\Http\Request  $request
+     * @param string $id
      *
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Request $request, $clientId): JsonResponse
+    public function update(Request $request, $id): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'api_token' => 'required',
+        $tokenCheck = $this->client->tokenBelongsToClient($request['api_token'], $id);
+        if (!$tokenCheck) { 
+            // return error response if token doesn't belong to client
+            return response()->json(['error'=>'Unauthorized update'], 401);         
+        }        
+
+        try{
+            // update record and pass in only fields that are fillable
+            $client = $this->client->update($request->only($this->client ->getModel()->fillable), $id);
+        } catch (\Exception $e) {
+            // return error response if something goes wrong
+            return response()->json(['error'=>$e->getMessage()], 422);
+        }
+
+        // prepare response
+        $response = fractal()
+                        ->item($client)
+                        ->transformWith(new ClientTransformer)
+                        ->toArray();
+
+        return response()->json($response, 201);
+    }
+
+    /**
+     * Delete client
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @param string $id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy(Request $request, $id): JsonResponse
+    {
+        $tokenCheck = $this->client->tokenIsAdmin($request['api_token'], $id);
+        if (!$tokenCheck) { 
+            // return error response if token doesn't belong to client
+            return response()->json(['error'=>'Unauthorized update'], 401);         
+        }
+
+        try{
+            // update record and pass in only fields that are fillable
+            $client = $this->client->delete($id);
+        } catch (\Exception $e) {
+            // return error response if something goes wrong
+            return response()->json(['error'=>$e->getMessage()], 422);
+        }
+
+        // return response
+        return response()->json([
+            'message' => 'Client deleted'
         ]);
-
-        if ($validator->fails()) { 
-            return response()->json(['error'=>$validator->errors()], 401);         
-        }
-
-        $client = $this->clients->findForUser($clientId, $request->api_token);
-
-        if (! $client) {
-            return new Response('', 404);
-        }
-
-        $this->clients->delete(
-            $client
-        );
     }
 
 }
