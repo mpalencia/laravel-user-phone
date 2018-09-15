@@ -12,20 +12,20 @@ use Validator;
 class UserController extends Controller 
 {
 
-    /** 
-    * @var \App\Repositories\Interfaces\UserInterface 
-    */
-    private $user;
+    // /** 
+    // * @var \App\Repositories\Interfaces\UserInterface 
+    // */
+    // private $user;
 
-    /**
-     * UserController constructor.
-     *
-     * @param App\Repositories\Interfaces\UserInterface $user
-     */
-    public function __construct( UserInterface $user )
-    {
-        $this->user = $user;
-    }
+    // /**
+    //  * UserController constructor.
+    //  *
+    //  * @param App\Repositories\Interfaces\UserInterface $user
+    //  */
+    // public function __construct( UserInterface $user )
+    // {
+    //     $this->user = $user;
+    // }
 
     /**
      * Create new user

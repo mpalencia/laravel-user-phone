@@ -12,21 +12,6 @@ use Validator;
 class PhoneController extends Controller
 {
 
-    /** 
-    * @var \App\Repositories\Interfaces\PhoneInterface 
-    */
-    private $phone;
-
-    /**
-     * PhoneController constructor.
-     *
-     * @param App\Repositories\Interfaces\PhoneInterface $phone
-     */
-    public function __construct( PhoneInterface $phone )
-    {
-        $this->phone = $phone;
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -35,10 +20,12 @@ class PhoneController extends Controller
      */
     public function store(PhoneRequest $request): JsonResponse
     {
+        $verify = $this->authorizePhoneToken('store', $request);
+
 
         try{
             // create record and pass in only fields that are fillable
-            $phone = $this->phone ->create($request->only($this->phone ->getModel()->fillable));
+            $phone = $this->phone->create($request->only($this->phone ->getModel()->fillable));
         } catch (\Exception $e) {
             // return error response if something goes wrong
             return response()->json(['error'=>$e->getMessage()], 422);

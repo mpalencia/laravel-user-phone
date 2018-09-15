@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Interfaces\UserInterface;
+use \App\Repositories\Interfaces\UserInterface;
 use \App\Repositories\Interfaces\PhoneInterface;
 use \App\Models\UserPhone;
 

@@ -10,5 +10,6 @@ interface UserInterface
     public function show($user_id);
     public function delete($user_id);
     public function getTokenUserId($api_token);
+    public function getTokenUserDetails($api_token);
 
 }

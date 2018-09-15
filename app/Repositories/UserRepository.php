@@ -58,6 +58,13 @@ class UserRepository implements UserInterface
         return $query['id'];
     }
 
+    // remove record from the database
+    public function getTokenUserDetails($api_token)
+    {
+        $query = $this->model->where('api_token', $api_token)->first();
+        return $query;
+    }
+
     // Get the associated model
     public function getModel()
     {
