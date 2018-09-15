@@ -13,14 +13,14 @@ class UserController extends Controller
 {
 
     /** 
-    * @var \App\Repositories\UserInterface 
+    * @var \App\Repositories\Interfaces\UserInterface 
     */
     private $user;
 
     /**
      * UserController constructor.
      *
-     * @param App\Repositories\UserInterface $user
+     * @param App\Repositories\Interfaces\UserInterface $user
      */
     public function __construct( UserInterface $user )
     {
@@ -36,9 +36,26 @@ class UserController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        if($request['api_token']) {
+            $tokenCheck = $this->user->tokenIsAdmin($request['api_token']);
+            if (!$tokenCheck) { 
+                if($tokenCheck != null) {
+                    // return error response if token is not admin user
+                    return response()->json(['error'=>'Unauthorized token'], 401);         
+                } else {
+                    $tokenCheck = $this->user->tokenIsAuthClient($request['api_token']);
+                    if (!$tokenCheck) { 
+                        // return error response if token is not authorized client
+                        return response()->json(['error'=>'Unauthorized token'], 401);         
+                    }
+                }
+            }
+        }
+
         $validator = Validator::make($request->all(), [ 
             'name'       => 'required',
             'email'       => 'required|email|unique:users',
+            'role'          => 'required',
             'password'  => 'required|min:6',
         ]);
 

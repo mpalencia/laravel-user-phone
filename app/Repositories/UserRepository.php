@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use \App\Repositories\Interfaces\UserInterface;
 use \App\Models\User;
+use \App\Models\Client;
 
 class UserRepository implements UserInterface
 {
@@ -38,16 +39,23 @@ class UserRepository implements UserInterface
         return $user;
     }
 
+    // Show user details
+    public function show($id)
+    {
+        return $this->model->find($id);
+    }
+
     // remove record from the database
     public function delete($id)
     {
         return $this->model->destroy($id);
     }
 
-    // Show user details
-    public function show($id)
+    // remove record from the database
+    public function getTokenUserId($api_token)
     {
-        return $this->model->find($id);
+        $query = $this->model->where('api_token', $api_token)->select('id')->first();
+        return $query['id'];
     }
 
     // Get the associated model
@@ -62,23 +70,44 @@ class UserRepository implements UserInterface
         $response = true;
         $user = $this->model->find($user_id);
         if($user->api_token != $api_token) {
-            $response = false;
+            $user = User::where('api_token', $api_token)->select('role')->first();
+            if($user["role"] != 'admin') {
+                $response = false;
+            }
         }
 
         return $response;
     }
 
     // Check if token is admin type
-    public function tokenIsAdmin($api_token, $user_id)
+    public function tokenIsAdmin($api_token)
     {
+        $user = User::where('api_token', $api_token)->select('role')->first();
+
         $response = true;
-        $user = $this->model->find($user_id);
-        if($user->api_token != $api_token) {
-            $response = false;
+
+        if($user["role"] == null){
+            $response = "";
+        } else {
+            if(strcmp($user["role"],'admin') != 0) {
+                $response = false;
+            }
         }
 
         return $response;
     }
 
+    // Check if token is authorized client
+    public function tokenIsAuthClient($api_token)
+    {
+        $response = true;
+
+        $client = Client::where('api_token', $api_token)->select('authorize')->first();
+        if(empty($client["authorize"])){
+            $response = false;
+        }
+
+        return $response;
+    }
 
 }

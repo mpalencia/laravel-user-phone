@@ -36,6 +36,14 @@ class ClientController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        if($request['api_token']) {
+            $tokenCheck = $this->client->tokenIsAdmin($request['api_token']);
+            if (!$tokenCheck['status']) { 
+                // return error response if token doesn't belong to an admin type
+                return response()->json(['error'=>$tokenCheck['message']], 401);         
+            }
+        }
+
         $validator = Validator::make($request->all(), [ 
             'name'       => 'required',
             'email'       => 'required|email|unique:clients',
@@ -143,12 +151,12 @@ class ClientController extends Controller
      */
     public function destroy(Request $request, $id): JsonResponse
     {
-        $tokenCheck = $this->client->tokenIsAdmin($request['api_token'], $id);
-        if (!$tokenCheck) { 
-            // return error response if token doesn't belong to client
-            return response()->json(['error'=>'Unauthorized update'], 401);         
+        $tokenCheck = $this->client->tokenIsAdmin($request['api_token']);
+        if (!$tokenCheck['status']) { 
+            // return error response if token doesn't belong to an admin type
+            return response()->json(['error'=>$tokenCheck['message']], 401);         
         }
-
+    
         try{
             // update record and pass in only fields that are fillable
             $client = $this->client->delete($id);

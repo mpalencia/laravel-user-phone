@@ -8,7 +8,8 @@ REST API with Package [Fractal](https://fractal.thephpleague.com/)
 ## Specs  
 Laravel 5.7.3  
 Php 7.2  
-Mysql
+Mysql 5.6
+phpunit
 
 ## Installation
 
@@ -18,6 +19,7 @@ run php artisan serve
 
 ## Route List
 
+with instruction
 
 ## Description
 
@@ -26,8 +28,11 @@ run php artisan serve
 
 Client is another entity like a user
 Client registration is publicly accessible and anyone can register
+Clients has 2 types, authorized and not authorized
+Users has 2 roles, admin and non-admin
 Admin type of user and authorize client are the only authorize to create new users
 Admin type of user can fully access the client's CRUD resources
+
 
 Objective
 To create a simple RESTful API which will store phone numbers of a user.

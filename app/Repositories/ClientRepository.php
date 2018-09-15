@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use \App\Repositories\Interfaces\ClientInterface;
 use \App\Models\Client;
+use \App\Models\User;
 
 class ClientRepository implements ClientInterface
 {
@@ -62,19 +63,28 @@ class ClientRepository implements ClientInterface
         $response = true;
         $client = $this->model->find($client_id);
         if($client->api_token != $api_token) {
-            $response = false;
+            $user = User::where('api_token', $api_token)->select('role')->first();
+            if($user["role"] != 'admin') {
+                $response = false;
+            }
         }
 
         return $response;
     }
 
     // Check if token is admin type
-    public function tokenIsAdmin($api_token, $client_id)
+    public function tokenIsAdmin($api_token)
     {
-        $response = true;
-        $client = $this->model->find($client_id);
-        if($client->api_token != $api_token) {
-            $response = false;
+        $user = User::where('api_token', $api_token)->select('role')->first();
+
+        $response = array('status' => true);
+
+        if(empty($user)) {
+            $response = array('status' => false, 'message' => 'Invalid token');
+        } else {
+            if($user["role"] != 'admin') {
+                $response = array('status' => false, 'message' => 'Unauthorized User');
+            }
         }
 
         return $response;

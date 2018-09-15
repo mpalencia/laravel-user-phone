@@ -6,6 +6,8 @@ use App\Repositories\UserRepository;
 use App\Repositories\Interfaces\UserInterface;
 use App\Repositories\ClientRepository;
 use App\Repositories\Interfaces\ClientInterface;
+use App\Repositories\PhoneRepository;
+use App\Repositories\Interfaces\PhoneInterface;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -22,6 +24,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             ClientInterface::class,
             ClientRepository::class
+        );
+        $this->app->bind(
+            PhoneInterface::class,
+            PhoneRepository::class
         );
     }
 }
