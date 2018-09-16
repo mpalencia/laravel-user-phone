@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ClientRequest extends FormRequest
+class ClientUpdate extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +23,12 @@ class ClientRequest extends FormRequest
      */
     public function rules()
     {
+        $id = \Request::segment(3);
         return [
-            //
+            'name'       => 'required',
+            'email'       => 'email|unique:clients,email,'.$id,
+            'authorize'  => 'required',
+            'password'  => 'min:6',
         ];
     }
 }

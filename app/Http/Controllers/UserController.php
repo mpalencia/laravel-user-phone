@@ -42,7 +42,7 @@ class UserController extends Controller
             return response()->json(['error'=>$e->getMessage()], 422);
         }
 
-        //prepare response
+        // prepare response
         $response = fractal($user, new UserTransformer()) ->addMeta(['token' => $user->api_token])->toArray();
 
         return response()->json($response, 201);
@@ -88,7 +88,7 @@ class UserController extends Controller
             return response()->json(['error'=>$e->getMessage()], 422);
         }
 
-        //prepare response
+        // prepare response
         $response = fractal($user, new UserTransformer())->toArray();
 
         return response()->json($response, 201);

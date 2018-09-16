@@ -11,10 +11,7 @@ use Validator;
 
 class PhoneController extends Controller
 {
-
-    /** 
-    * @var \App\Repositories\Interfaces\PhoneInterface 
-    */
+     /** @var \App\Repositories\Interfaces\PhoneInterface */
     protected $phone;
 
     /**
@@ -22,7 +19,7 @@ class PhoneController extends Controller
      *
      * @param App\Repositories\Interfaces\PhoneInterface $phone
      */
-    public function __construct( PhoneInterface $phone )
+    public function __construct(PhoneInterface $phone)
     {
         $this->phone = $phone;
     }
@@ -114,7 +111,7 @@ class PhoneController extends Controller
 
         // return response
         return response()->json([
-            'message' => "User's phone number is deleted"
+            'message' => "User's phone number successfully deleted"
         ]);
     }
 }

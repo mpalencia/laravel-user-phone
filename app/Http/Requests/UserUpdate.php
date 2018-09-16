@@ -23,12 +23,12 @@ class UserUpdate extends FormRequest
      */
     public function rules()
     {
-        $uri3 = \Request::segment(3);
+        $id = \Request::segment(3);
         return [
             'password'  => 'min:6',
             'role'          => 'required',
             'name'        => 'required',
-            'email'        => 'email|unique:users,email,'.$uri3,
+            'email'        => 'email|unique:users,email,'.$id,
         ];
     }
 

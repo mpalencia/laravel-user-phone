@@ -13,7 +13,6 @@ class ClientTransformer extends TransformerAbstract
             'email'        => $client->email,
             'authorize'  => $client->authorize,
             'registered' => $client->created_at,
-            'password'  => $client->password,
         ];
     }
 }

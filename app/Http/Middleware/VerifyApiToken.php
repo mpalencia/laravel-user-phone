@@ -115,8 +115,34 @@ class VerifyApiToken
         */
         } else if (strpos($module, 'client') !== false) {
             
+            $clientId = $uri3;
 
-            $client = $this->client->getTokenClientDetails($api_token);
+            $method = str_replace("client", "", $uri2);
+            $method = str_replace("-", "", $method);
+
+            switch ($method) {
+
+                 /** create */
+                case 'create':
+                    if($user['role'] == 'non-admin') {
+                        $error = ['message'=>'Unauthorized user.', 'error' => ['api_token' => ['Invalid token.']]];
+                        return response()->json($error, 403);                        
+                    }
+                    break;
+
+                /** update, delete, show */
+                default:
+                    if(empty($client)) {
+                        $error = ['message'=>'Token does not exist.', 'error' => ['api_token' => ['Invalid token.']]];
+                        return response()->json($error, 404);
+                    }
+                    $clientDetails = $this->client->show($clientId);
+                    if($clientDetails['id'] != $client['id']) {
+                        $error = ['message'=>'Unauthorized client.', 'error' => ['api_token' => ['Invalid token.']]];
+                        return response()->json($error, 403);
+                    }
+                    break;
+            }
 
         /*
         * User Phone authorization verification
