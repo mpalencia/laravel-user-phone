@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use App\Transformers\UserTransformer;
@@ -11,59 +12,29 @@ use Validator;
 
 class UserController extends Controller 
 {
+    /**
+     * @var \App\Repositories\Interfaces\UserInterface
+     */
+    private $user;
 
-    // /** 
-    // * @var \App\Repositories\Interfaces\UserInterface 
-    // */
-    // private $user;
-
-    // /**
-    //  * UserController constructor.
-    //  *
-    //  * @param App\Repositories\Interfaces\UserInterface $user
-    //  */
-    // public function __construct( UserInterface $user )
-    // {
-    //     $this->user = $user;
-    // }
+    /**
+     * UserController constructor.
+     *
+     * @param App\Repositories\Interfaces\UserInterface $user
+     */
+    public function __construct( UserInterface $user )
+    {
+        $this->user = $user;
+    }
 
     /**
      * Create new user
      *
-     * @param \Illuminate\Http\Request  $request
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @param App\Http\Requests\UserRequest  $request
+     * @return Illuminate\Http\JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(UserRequest $request): JsonResponse
     {
-        if($request['api_token']) {
-            $tokenCheck = $this->user->tokenIsAdmin($request['api_token']);
-            if (!$tokenCheck) { 
-                if($tokenCheck != null) {
-                    // return error response if token is not admin user
-                    return response()->json(['error'=>'Unauthorized token'], 401);         
-                } else {
-                    $tokenCheck = $this->user->tokenIsAuthClient($request['api_token']);
-                    if (!$tokenCheck) { 
-                        // return error response if token is not authorized client
-                        return response()->json(['error'=>'Unauthorized token'], 401);         
-                    }
-                }
-            }
-        }
-
-        $validator = Validator::make($request->all(), [ 
-            'name'       => 'required',
-            'email'       => 'required|email|unique:users',
-            'role'          => 'required',
-            'password'  => 'required|min:6',
-        ]);
-
-        if ($validator->fails()) { 
-            // return error response if validation failed
-            return response()->json(['error'=>$validator->errors()], 401);         
-        }
-
         try{
             // create record and pass in only fields that are fillable
             $user = $this->user ->create($request->only($this->user ->getModel()->fillable));
@@ -73,32 +44,21 @@ class UserController extends Controller
         }
 
         //prepare response
-        $response = fractal()
-                        ->item($user)
-                        ->transformWith(new UserTransformer)
-                        ->addMeta([
-                            'token' => $user->api_token,
-                        ])
-                        ->toArray();
+        $response = fractal($user, new PhoneTransformer()) ->addMeta(['token' => $user->api_token])->toArray();
 
         return response()->json($response, 201);
+
     }
 
     /**
      * Show user details
      *
-     * @param \Illuminate\Http\Request  $request
+     * @param App\Http\Requests\UserRequest $request
      * @param string $id
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @return Illuminate\Http\JsonResponse
      */
-    public function show(Request $request, $id): JsonResponse
-    {
-        $tokenCheck = $this->user->tokenBelongsToUser($request['api_token'], $id);
-        if (!$tokenCheck) { 
-            // return error response if token doesn't belong to user
-            return response()->json(['error'=>'Unauthorized Viewing'], 401);         
-        }        
+    public function show(UserRequest $request, $id): JsonResponse
+    {  
 
         try{
             // get user details
@@ -120,12 +80,11 @@ class UserController extends Controller
     /**
      * Create new user
      *
-     * @param \Illuminate\Http\Request  $request
+     * @param App\Http\Requests\UserRequest  $request
      * @param string $id
-     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id): JsonResponse
+    public function update(UserRequest $request, $id): JsonResponse
     {
         $tokenCheck = $this->user->tokenBelongsToUser($request['api_token'], $id);
         if (!$tokenCheck) { 
@@ -151,12 +110,11 @@ class UserController extends Controller
     }
 
     /**
-     * Delete user
+     * Remove user from database
      *
-     * @param \Illuminate\Http\Request  $request
+     * @param App\Http\Requests\UserRequest  $request
      * @param string $id
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @return Illuminate\Http\JsonResponse
      */
     public function destroy(Request $request, $id): JsonResponse
     {

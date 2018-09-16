@@ -8,19 +8,39 @@ REST API with Package [Fractal](https://fractal.thephpleague.com/)
 ## Specs  
 Laravel 5.7.3  
 Php 7.2  
-Mysql 5.6
-phpunit
-
+Mysql 5.6  
+phpunit 7.0  
+  
 ## Installation
 
-run php artisan migrate
-run db:seed
-run php artisan serve
-
+run php artisan migrate  
+run db:seed  
+run php artisan serve  
+  
 ## Route List
+  
+To check list via terminal. Run 'php artisan route:list'  
+  
+* Get api_token via client registration or use supe admin api_token  
 
-with instruction
-
+// User  
+Create User : http://localhost:8000/api/user-create (POST)  
+Update User : http://localhost:8000/api/user-update/{id} (PUT)  
+Delete User : http://localhost:8000/api/user-delete/{id} (DELETE)  
+Show User : http://localhost:8000/api/user/{id} (GET)  
+  
+// Client  
+Create User : http://localhost:8000/api/client-create (POST)  
+Update User : http://localhost:8000/api/client-update/{id} (PUT)  
+Delete User : http://localhost:8000/api/client-delete/{id} (DELETE)  
+Show User : http://localhost:8000/api/client/{id} (GET)  
+  
+// User Phone  
+Create User : http://localhost:8000/api/phone-create (POST)  
+Update User : http://localhost:8000/api/phone-update/{id} (PUT)  
+Delete User : http://localhost:8000/api/phone-delete/{id} (DELETE)  
+Show User : http://localhost:8000/api/phone/{id} (GET)  
+  
 ## Description
 
 
@@ -32,7 +52,6 @@ Clients has 2 types, authorized and not authorized
 Users has 2 roles, admin and non-admin
 Admin type of user and authorize client are the only authorize to create new users
 Admin type of user can fully access the client's CRUD resources
-
 
 Objective
 To create a simple RESTful API which will store phone numbers of a user.

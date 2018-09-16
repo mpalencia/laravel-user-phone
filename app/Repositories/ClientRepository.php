@@ -51,6 +51,14 @@ class ClientRepository implements ClientInterface
         return $this->model->find($id);
     }
 
+    
+    // get details of client via token
+    public function getTokenClientDetails($api_token)
+    {
+        $query = $this->model->where('api_token', $api_token)->first();
+        return $query;
+    }
+
     // Get the associated model
     public function getModel()
     {
