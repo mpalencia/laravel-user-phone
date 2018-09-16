@@ -11,6 +11,7 @@ class ClientTransformer extends TransformerAbstract
             'id'             => $client->id,
             'name'        => $client->name,
             'email'        => $client->email,
+            'authorize'  => $client->authorize,
             'registered' => $client->created_at,
             'password'  => $client->password,
         ];

@@ -21,7 +21,8 @@ run php artisan serve
   
 To check list via terminal. Run 'php artisan route:list'  
   
-* Get api_token via client registration or use supe admin api_token  
+* Get api_token via client registration or use super admin api_token (Run 'php artisan db:seed to create super admin')  
+* On testing via Postman, please add on the header - key: Accept, value: application/json
 
 // User  
 Create User : http://localhost:8000/api/user-create (POST)  
@@ -46,13 +47,13 @@ Show User : http://localhost:8000/api/phone/{id} (GET)
 
 ## Assumptions
 
-Client is another entity like a user
-Client registration is publicly accessible and anyone can register
-Clients has 2 types, authorized and not authorized
-Users has 2 roles, admin and non-admin
-Admin type of user and authorize client are the only authorize to create new users
-Admin type of user can fully access the client's CRUD resources
-
+- Client is another entity like a user  
+- Client registration is publicly accessible and anyone can register  
+- Clients has 2 types, authorized and not authorized  
+- Users has 2 roles, admin and non-admin  
+- Admin type of user and authorize client are the only authorize to create new users  
+- Admin type of user can fully access the client's CRUD resources  
+  
 Objective
 To create a simple RESTful API which will store phone numbers of a user.
 

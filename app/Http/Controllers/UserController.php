@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\UserCreate;
+use App\Http\Requests\UserUpdate;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use App\Transformers\UserTransformer;
@@ -12,9 +13,7 @@ use Validator;
 
 class UserController extends Controller 
 {
-    /**
-     * @var \App\Repositories\Interfaces\UserInterface
-     */
+    /** @var \App\Repositories\Interfaces\UserInterface */
     private $user;
 
     /**
@@ -33,7 +32,7 @@ class UserController extends Controller
      * @param App\Http\Requests\UserRequest  $request
      * @return Illuminate\Http\JsonResponse
      */
-    public function store(UserRequest $request): JsonResponse
+    public function store(UserCreate $request): JsonResponse
     {
         try{
             // create record and pass in only fields that are fillable
@@ -44,10 +43,9 @@ class UserController extends Controller
         }
 
         //prepare response
-        $response = fractal($user, new PhoneTransformer()) ->addMeta(['token' => $user->api_token])->toArray();
+        $response = fractal($user, new UserTransformer()) ->addMeta(['token' => $user->api_token])->toArray();
 
         return response()->json($response, 201);
-
     }
 
     /**
@@ -57,9 +55,8 @@ class UserController extends Controller
      * @param string $id
      * @return Illuminate\Http\JsonResponse
      */
-    public function show(UserRequest $request, $id): JsonResponse
-    {  
-
+    public function show($id): JsonResponse
+    {
         try{
             // get user details
             $user = $this->user->show($id);
@@ -69,10 +66,7 @@ class UserController extends Controller
         }
 
         // prepare response
-        $response = fractal()
-                        ->item($user)
-                        ->transformWith(new UserTransformer)
-                        ->toArray();
+        $response = fractal($user, new UserTransformer())->toArray();
 
         return response()->json($response, 201);
     }
@@ -84,14 +78,8 @@ class UserController extends Controller
      * @param string $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UserRequest $request, $id): JsonResponse
+    public function update(UserUpdate $request, $id): JsonResponse
     {
-        $tokenCheck = $this->user->tokenBelongsToUser($request['api_token'], $id);
-        if (!$tokenCheck) { 
-            // return error response if token doesn't belong to user
-            return response()->json(['error'=>'Unauthorized update'], 401);         
-        }        
-
         try{
             // update record and pass in only fields that are fillable
             $user = $this->user->update($request->only($this->user ->getModel()->fillable), $id);
@@ -100,11 +88,8 @@ class UserController extends Controller
             return response()->json(['error'=>$e->getMessage()], 422);
         }
 
-        // prepare response
-        $response = fractal()
-                        ->item($user)
-                        ->transformWith(new UserTransformer)
-                        ->toArray();
+        //prepare response
+        $response = fractal($user, new UserTransformer())->toArray();
 
         return response()->json($response, 201);
     }
@@ -118,14 +103,8 @@ class UserController extends Controller
      */
     public function destroy(Request $request, $id): JsonResponse
     {
-        $tokenCheck = $this->user->tokenIsAdmin($request['api_token'], $id);
-        if (!$tokenCheck) { 
-            // return error response if token doesn't belong to user
-            return response()->json(['error'=>'Unauthorized update'], 401);         
-        }
-
         try{
-            // update record and pass in only fields that are fillable
+            // delete record
             $user = $this->user->delete($id);
         } catch (\Exception $e) {
             // return error response if something goes wrong
@@ -134,7 +113,7 @@ class UserController extends Controller
 
         // return response
         return response()->json([
-            'message' => 'User deleted'
+            'message' => 'User successfully deleted'
         ]);
     }
 

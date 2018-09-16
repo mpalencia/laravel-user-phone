@@ -31,7 +31,6 @@ use Illuminate\Http\Request;
 
 //public routes
 Route::post('client-create', 'ClientController@store');
-Route::post('user-create', 'UserController@store');
 
 //private routes
 Route::group(['middleware' => 'token.verification'], function() {
@@ -42,6 +41,7 @@ Route::group(['middleware' => 'token.verification'], function() {
     Route::delete('client-delete/{id}', 'ClientController@destroy');
 
     // users
+    Route::post('user-create', 'UserController@store');
     Route::get('user/{id}', 'UserController@show');
     Route::put('user-update/{id}', 'UserController@update');
     Route::delete('user-delete/{id}', 'UserController@destroy');

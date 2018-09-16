@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserRequest extends FormRequest
+class UserUpdate extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,11 +23,25 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
+        $uri3 = \Request::segment(3);
         return [
-            'name'       => 'required',
-            'email'       => 'required|email|unique:users',
+            'password'  => 'min:6',
             'role'          => 'required',
-            'password'  => 'required|min:6',
+            'name'        => 'required',
+            'email'        => 'email|unique:users,email,'.$uri3,
         ];
     }
+
+    /**
+     * Custom messages
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'role.required'=>"role is required. ('admin' or 'non-admin')",
+        ];
+    }
+
 }

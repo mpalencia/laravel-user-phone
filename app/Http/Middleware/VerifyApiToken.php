@@ -56,7 +56,6 @@ class VerifyApiToken
         /*
         * check token authorizations
         */
-
         $uri1 = \Request::segment(1);
         $uri2 = \Request::segment(2);
         $uri3 = \Request::segment(3);
@@ -67,36 +66,45 @@ class VerifyApiToken
         * User authorization verification
         */
         if (strpos($module, 'user') !== false) {
-            
+
             $userId = $uri3;
 
-            switch (strpos($uri2, 'user')) {
+            $method = str_replace("user", "", $uri2);
+            $method = str_replace("-", "", $method);
+
+            switch ($method) {
 
                  /** create */
                 case 'create':
-                   
                     if($user['role'] == 'non-admin') {
-                        $error = ['message'=>'Unauthorized user.','error' => ['api_token' => ['Invalid token.']]];
+                        $error = ['message'=>'Unauthorized user.', 'error' => ['api_token' => ['Invalid token.']]];
                         return response()->json($error, 403);                        
-                    } else if($client['authorize'] == 0) {
-                        $error = ['message'=>'Unauthorized client.','error' => ['api_token' => ['Invalid token.']]];
+                    } else if($client['authorize'] === 0) {
+                        $error = ['message'=>'Unauthorized client.', 'error' => ['api_token' => ['Invalid token.']]];
                         return response()->json($error, 403);    
                     } else {
-                        $error = ['message'=>'Token does not exist.','error' => ['api_token' => ['Invalid token.']]];
+                        $error = ['message'=>'Token does not exist.', 'error' => ['api_token' => ['Invalid token.']]];
                         return response()->json($error, 404);  
+                    }
+                    if($request->role == 'admin' && !empty($client['id'])) {
+                        $error = ['message'=>'Only admin type user can create admin role.', 'error' => ['api_token' => ['Invalid role.']]];
+                        return response()->json($error, 403);  
                     }
                     break;
 
                 /** update, delete, show */
                 default:
-
-                    if(empty($user)){
-                        $error = ['message'=>'Token does not exist.','error' => ['api_token' => ['Invalid token.']]];
+                    if(empty($user)) {
+                        $error = ['message'=>'Token does not exist.', 'error' => ['api_token' => ['Invalid token.']]];
                         return response()->json($error, 404);
                     }
-                    $userDetails = $this->user->getDetails($userId);
+                    $userDetails = $this->user->show($userId);
+                    if($request->role == 'admin' && $user['role'] == 'non-admin') {
+                        $error = ['message'=>'Only admin type user can create admin role.', 'error' => ['api_token' => ['Invalid role.']]];
+                        return response()->json($error, 403);  
+                    }
                     if($userDetails['id'] != $user['id']) {
-                        $error = ['message'=>'Unauthorized user.','error' => ['api_token' => ['Invalid token.']]];
+                        $error = ['message'=>'Unauthorized user.', 'error' => ['api_token' => ['Invalid token.']]];
                         return response()->json($error, 403);
                     }
                     break;
@@ -123,7 +131,10 @@ class VerifyApiToken
                 return response()->json($error, 404);
             }
 
-            switch (strpos($uri2, 'client')) {
+            $method = str_replace("phone", "", $uri2);
+            $method = str_replace("-", "", $method);
+
+            switch ($method) {
                 case 'create':
                     /** create */
                     break;

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PhoneRequest extends FormRequest
+class UserCreate extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,10 @@ class PhoneRequest extends FormRequest
     public function rules()
     {
         return [
-             'phone_number' => 'required|unique:user_phones'
+            'name'       => 'required',
+            'email'       => 'required|email|unique:users',
+            'role'          => 'required',
+            'password'  => 'required|min:6',
         ];
     }
 
@@ -36,8 +39,7 @@ class PhoneRequest extends FormRequest
     public function messages()
     {
         return [
-            'phone_number.required'=>'phone_number is required',
-            'phone_number.unique'=>'phone_number is already used'
+            'role.required'=>"role is required. ('admin' or 'non-admin')",
         ];
     }
 
