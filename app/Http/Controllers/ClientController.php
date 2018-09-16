@@ -80,12 +80,6 @@ class ClientController extends Controller
      */
     public function update(ClientUpdate $request, $id): JsonResponse
     {
-        $tokenCheck = $this->client->tokenBelongsToClient($request['api_token'], $id);
-        if (!$tokenCheck) { 
-            // return error response if token doesn't belong to client
-            return response()->json(['error'=>'Unauthorized update'], 401);         
-        }        
-
         try{
             // update record and pass in only fields that are fillable
             $client = $this->client->update($request->only($this->client ->getModel()->fillable), $id);
