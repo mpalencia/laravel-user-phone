@@ -21,8 +21,8 @@ run php artisan serve
   
 To check list via terminal. Run 'php artisan route:list'  
   
-* Get api_token via client registration or use super admin api_token (Run 'php artisan db:seed to create super admin')  
-* On testing via Postman, please add on the header - key: Accept, value: application/json
+* Get api_token via client registration or use super admin api_token (Run 'php artisan db:seed' to create super admin)  
+* On testing via Postman, please add on the header - key: Accept, value: application/json http://prntscr.com/kvfj71
 
 // User  
 Create User : http://localhost:8000/api/user-create (POST)  
