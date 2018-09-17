@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PhoneRequest extends FormRequest
+class PhoneUpdate extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +23,9 @@ class PhoneRequest extends FormRequest
      */
     public function rules()
     {
+        $id = \Request::segment(3);
         return [
-             'phone_number' => 'required|unique:user_phones'
+            'phone_number' => 'required|unique:user_phones,phone_number,'.$id
         ];
     }
 

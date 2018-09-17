@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Requests\PhoneRequest ;
+use App\Http\Requests\PhoneCreate;
+use App\Http\Requests\PhoneUpdate;
 use App\Transformers\PhoneTransformer;
 use App\Repositories\Interfaces\PhoneInterface;
 use Illuminate\Http\JsonResponse;
-use Validator;
 
 class PhoneController extends Controller
 {
@@ -27,10 +26,10 @@ class PhoneController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param App\Http\Requests\PhoneCreate $request
+     * @return Illuminate\Http\JsonResponse
      */
-    public function store(PhoneRequest $request): JsonResponse
+    public function store(PhoneCreate $request): JsonResponse
     {
         try{
             // create record and pass in only fields that are fillable
@@ -60,11 +59,11 @@ class PhoneController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param App\Http\Requests\PhoneUpdate $request
+     * @param int  $id
+     * @return Illuminate\Http\JsonResponse
      */
-    public function update(PhoneRequest $request, $id):  JsonResponse
+    public function update(PhoneUpdate $request, $id):  JsonResponse
     {
         
         $phone = $this->phone->getDetails($id);
