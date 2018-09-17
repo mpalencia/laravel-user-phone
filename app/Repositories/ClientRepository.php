@@ -32,6 +32,7 @@ class ClientRepository implements ClientInterface
         $client = $this->client->create([
             'name'       => $data['name'],
             'email'       => $data['email'],
+            'authorize'  => $data['authorize'],
             'password'  => bcrypt($data['password']),
             'api_token' => bcrypt($data['email'])
         ]);

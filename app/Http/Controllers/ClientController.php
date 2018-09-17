@@ -8,11 +8,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use App\Transformers\ClientTransformer;
 use App\Repositories\Interfaces\ClientInterface;
-use Validator;
 
 class ClientController extends Controller 
 {
-
     /** @var \App\Repositories\Interfaces\ClientInterface */
     private $client;
 
@@ -29,7 +27,7 @@ class ClientController extends Controller
     /**
      * Create new client
      *
-     * @param \Illuminate\Http\Request  $request
+     * @param \App\Http\Requests\ClientCreate $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(ClientCreate $request): JsonResponse
@@ -73,7 +71,7 @@ class ClientController extends Controller
     /**
      * Update client
      *
-     * @param \Illuminate\Http\Request  $request
+     * @param App\Http\Requests\ClientUpdate $request
      * @param string $id
      *
      * @return \Illuminate\Http\JsonResponse

@@ -13,26 +13,14 @@ use Illuminate\Http\Request;
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
-//Route::post('auth/register', 'AuthController@register');
-//Route::post('auth/login', 'AuthController@login');
-//Route::get('users', 'UserController@users');
-//Route::get('users/{id}', 'UserController@profileById')->middleware('auth:api');
-
-//Route::post('post', 'PostController@add')->middleware('auth:api');
-//Route::put('post/{post}', 'PostController@update')->middleware('auth:api');
-//Route::delete('post/{post}', 'PostController@delete')->middleware('auth:api');
-
-//Route::get('users/profile', 'UserController@profile')->middleware('auth:api');
-
-
-//public routes
+/**
+ * Public routes
+ */
 Route::post('client-create', 'ClientController@store');
 
-//private routes
+/**
+ * Private routes
+ */
 Route::group(['middleware' => 'token.verification'], function() {
 
     // clients 
@@ -41,7 +29,7 @@ Route::group(['middleware' => 'token.verification'], function() {
     Route::delete('client-delete/{id}', 'ClientController@destroy');
 
     // users
-    Route::post('user-create', 'UserController@store');
+   Route::post('user-create', 'UserController@store');
     Route::get('user/{id}', 'UserController@show');
     Route::put('user-update/{id}', 'UserController@update');
     Route::delete('user-delete/{id}', 'UserController@destroy');

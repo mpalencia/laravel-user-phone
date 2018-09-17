@@ -13,7 +13,7 @@ class ClientUpdate extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -29,6 +29,18 @@ class ClientUpdate extends FormRequest
             'email'       => 'email|unique:clients,email,'.$id,
             'authorize'  => 'required',
             'password'  => 'min:6',
+        ];
+    }
+
+    /**
+     * Custom messages
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'authorize.required'=>"Authorize is required. (0 or 1)",
         ];
     }
 }
