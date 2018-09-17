@@ -163,6 +163,9 @@ return [
         // https://github.com/spatie/laravel-fractal
         Spatie\Fractal\FractalServiceProvider::class,
 
+        //https://github.com/propaganistas/laravel-phone
+        Propaganistas\LaravelPhone\PhoneServiceProvider::class,
+
         // custom repository
         App\Providers\RepositoryServiceProvider::class,
 

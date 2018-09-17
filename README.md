@@ -8,7 +8,7 @@ REST API with Package [Fractal](https://fractal.thephpleague.com/)
 ## Specs  
 Laravel 5.7.3  
 Php 7.2  
-Mysql 5.6  
+Mysql 5.6
 phpunit 7.0  
   
 ## Installation

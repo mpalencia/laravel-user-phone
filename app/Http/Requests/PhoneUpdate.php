@@ -25,7 +25,7 @@ class PhoneUpdate extends FormRequest
     {
         $id = \Request::segment(3);
         return [
-            'phone_number' => 'required|unique:user_phones,phone_number,'.$id
+            'phone_number' => 'required|phone:PH|unique:user_phones,phone_number,'.$id
         ];
     }
 

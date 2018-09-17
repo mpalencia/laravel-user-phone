@@ -24,7 +24,7 @@ class PhoneCreate extends FormRequest
     public function rules()
     {
         return [
-            'phone_number' => 'required|unique:user_phones'
+            'phone_number' => 'required|phone:PH|unique:user_phones'
         ];
     }
 
