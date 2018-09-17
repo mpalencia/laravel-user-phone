@@ -37,10 +37,11 @@ Delete User : http://localhost:8000/api/client-delete/{id} (DELETE)
 Show User : http://localhost:8000/api/client/{id} (GET)  
   
 // User Phone  
-Create User : http://localhost:8000/api/phone-create (POST)  
-Update User : http://localhost:8000/api/phone-update/{id} (PUT)  
-Delete User : http://localhost:8000/api/phone-delete/{id} (DELETE)  
-Show User : http://localhost:8000/api/phone/{id} (GET)  
+Create User Phone : http://localhost:8000/api/phone-create (POST)  
+Update User Phone : http://localhost:8000/api/phone-update/{id} (PUT)  
+Delete User Phone : http://localhost:8000/api/phone-delete/{id} (DELETE)  
+Show User Phone : http://localhost:8000/api/phone/{id} (GET)  
+Show All User Phone : http://localhost:8000/api/phones/{user_id} (GET)  
   
 ## Description
 

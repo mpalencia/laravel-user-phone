@@ -5,6 +5,7 @@ namespace App\Repositories;
 use \App\Repositories\Interfaces\UserInterface;
 use \App\Repositories\Interfaces\PhoneInterface;
 use \App\Models\UserPhone;
+use App\Transformers\PhoneTransformer;
 
 class PhoneRepository implements PhoneInterface
 {
@@ -44,10 +45,26 @@ class PhoneRepository implements PhoneInterface
         return $phone;
     }
 
-    // Show phone details
+    /**
+     * Display data from database
+     *
+     * @param int $id
+     * @return array
+     */
     public function show($id)
     {
+        return $this->phone->find($id);
+    }
 
+    /**
+     * Display data from database
+     *
+     * @param int $id
+     * @return array
+     */
+    public function showAll(array $data, $userId)
+    {
+        return $this->phone->where('user_id', $userId)->paginate(10);
     }
 
     /**

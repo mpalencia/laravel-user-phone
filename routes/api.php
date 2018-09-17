@@ -36,8 +36,8 @@ Route::group(['middleware' => 'token.verification'], function() {
 
     // user_phones
     Route::get('phone/{id}', 'PhoneController@show');
+    Route::get('phones/{user_id}', 'PhoneController@showAll');    
     Route::post('phone-create', 'PhoneController@store');
     Route::put('phone-update/{id}', 'PhoneController@update');
     Route::delete('phone-delete/{id}', 'PhoneController@destroy');
-
 });
