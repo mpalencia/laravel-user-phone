@@ -9,9 +9,6 @@ use \App\Models\User;
 
 class UserTest extends TestCase
 {
-    /** @var stores up the created user id for deletion on teardown */
-    private $createdUserId;
-
     /** @var stores up admin details */
     private $createdAdminId;
     private $adminToken;
@@ -49,7 +46,6 @@ class UserTest extends TestCase
 
         $this->createdNonAdminId = $nonAdmin->id;
         $this->nonAdminToken = $nonAdmin->api_token;
-
     }
 
     /** @test */

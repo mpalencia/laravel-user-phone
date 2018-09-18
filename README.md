@@ -19,7 +19,7 @@ REST API with Package [Fractal](https://fractal.thephpleague.com/)
 Laravel 5.7.3  
 Php 7.2  
 Mysql 5.6  
-phpunit 7.3  
+Phpunit 7.3  
   
 ## Installation
 - Install Composer

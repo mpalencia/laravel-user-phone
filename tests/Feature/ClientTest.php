@@ -48,7 +48,6 @@ class ClientTest extends TestCase
 
         $this->createdAdminId = $admin->id;
         $this->adminToken = $admin->api_token;
-
     }
 
     /** @test */
