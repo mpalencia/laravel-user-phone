@@ -24,7 +24,7 @@ class ClientTest extends TestCase
      *
      * @return void
      */
-    public function testCanCreateUser(): void
+    public function testCanCreateClient(): void
     {
         $data = [
             'name' => 'Matthew Palencia',
@@ -48,7 +48,7 @@ class ClientTest extends TestCase
      *
      * @return void
      */
-    public function testCanUpdateUser(): void
+    public function testCanUpdateClient(): void
     {
         $clientFactory = factory(Client::class)->create();
 
@@ -72,7 +72,7 @@ class ClientTest extends TestCase
      *
      * @return void
      */
-    public function testCanShowUser(): void
+    public function testCanShowClient(): void
     {
         $clientFactory = factory(Client::class)->create();
 
@@ -90,7 +90,7 @@ class ClientTest extends TestCase
      *
      * @return void
      */
-    public function testCanDeleteUser(): void
+    public function testCanDeleteClient(): void
     {
         $clientFactory = factory(Client::class)->create();
 
@@ -104,7 +104,7 @@ class ClientTest extends TestCase
      *
      * @return void
      */
-    public function testCanGetUserDetailsByToken(): void
+    public function testCanGetClientDetailsByToken(): void
     {
         $clientFactory = factory(Client::class)->create();
 

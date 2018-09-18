@@ -1,6 +1,8 @@
 <?php
 
 use Faker\Generator as Faker;
+use App\Models\UserPhone;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -13,9 +15,9 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(App\Models\UserPhone::class, function (Faker\Generator $faker) {
+$factory->define(UserPhone::class, function (Faker $faker) {
     return [
-        'user_id' => $faker->randomDigit,
+        'user_id' => 1,
         'phone_number' => $faker->phoneNumber,
     ];
 });

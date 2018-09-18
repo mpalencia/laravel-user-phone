@@ -3,8 +3,10 @@
 namespace App\Repositories;
 
 use \App\Repositories\Interfaces\UserInterface;
+use \App\Repositories\UserRepository;
 use \App\Repositories\Interfaces\PhoneInterface;
 use \App\Models\UserPhone;
+use \App\Models\User;
 use App\Transformers\PhoneTransformer;
 
 class PhoneRepository implements PhoneInterface
@@ -21,10 +23,9 @@ class PhoneRepository implements PhoneInterface
      * @param \App\Models\UserPhone $phone
      * @param App\Repositories\Interfaces\UserInterface $user
      */
-    public function __construct(UserPhone $phone, UserInterface $user)
+    public function __construct(UserPhone $phone)
     {
         $this->phone = $phone;
-        $this->user = $user;
     }
 
     /**
@@ -35,7 +36,9 @@ class PhoneRepository implements PhoneInterface
      */
     public function create(array $data)
     {
-        $userId = $this->user->getTokenUserId($data['api_token']);
+        $userRepo = new UserRepository(new User);
+
+        $userId = $userRepo->getTokenUserId($data['api_token']);
 
         $phone = $this->phone->create([
             'user_id'            => $userId,

@@ -20,7 +20,7 @@ $factory->define(User::class, function (Faker $faker) {
         'name' => $faker->name,
         'email' => $email,
         'role' => 'non-admin',
-        'password' => bcrypt(str_random(10)), // secret
+        'password' => bcrypt(str_random(10)),
         'api_token' => bcrypt($email)
     ];
 });

@@ -33,14 +33,13 @@ class UserTest extends TestCase
             'role' => 'admin'
         ];
 
-        $user = $this->userRepo->create($data);
-        $this->createdUserId = $user->id;
-        $found = $this->userRepo->show($user->id);
+        $created = $this->userRepo->create($data);
+        $this->createdUserId = $created->id;
 
-        $this->assertInstanceOf(User::class, $user);
-        $this->assertEquals($data['name'], $found->name);
-        $this->assertEquals($data['email'], $found->email);
-        $this->assertEquals($data['role'], $found->role);
+        $this->assertInstanceOf(User::class, $created);
+        $this->assertEquals($data['name'], $created->name);
+        $this->assertEquals($data['email'], $created->email);
+        $this->assertEquals($data['role'], $created->role);
     }
 
     /**
@@ -60,11 +59,10 @@ class UserTest extends TestCase
 
         $this->createdUserId = $userFactory->id;
         $updated = $this->userRepo->update($data, $userFactory->id);
-        $found = $this->userRepo->show($userFactory->id);
 
-        $this->assertEquals($data['name'], $found->name);
-        $this->assertEquals($data['email'], $found->email); 
-        $this->assertEquals($data['role'], $found->role);
+        $this->assertEquals($data['name'], $updated->name);
+        $this->assertEquals($data['email'], $updated->email); 
+        $this->assertEquals($data['role'], $updated->role);
     }
 
     /**

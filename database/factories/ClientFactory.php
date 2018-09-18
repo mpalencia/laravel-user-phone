@@ -20,7 +20,7 @@ $factory->define(Client::class, function (Faker $faker) {
         'name' => $faker->name,
         'email' => $email,
         'authorize' => 1,
-        'password' => bcrypt(str_random(10)), // secret
+        'password' => bcrypt(str_random(10)),
         'api_token' => bcrypt($email)
     ];
 });
