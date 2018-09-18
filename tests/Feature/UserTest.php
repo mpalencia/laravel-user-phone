@@ -12,17 +12,23 @@ class UserTest extends TestCase
     /** @var stores up the created user id for deletion on teardown */
     private $createdUserId;
 
-    /** @var stores up admin token */
+    /** @var stores up admin details */
+    private $createdAdminId;
     private $adminToken;
+
+    /** @var stores up non-admin details */
+    private $createdNonAdminId;
+    private $nonAdminToken;
 
     public function setUp()
     {
         parent::setUp();
+
         $this->userRepo = new \App\Repositories\UserRepository(new User);
 
         //create admin type user (for token use)
         $adminData = [
-            'name' => 'User Tester',
+            'name' => 'User Admin',
             'email' =>  'admin@mail.com',
             'password' => 'secret!',
             'role' => 'admin'
@@ -31,6 +37,19 @@ class UserTest extends TestCase
 
         $this->createdAdminId = $admin->id;
         $this->adminToken = $admin->api_token;
+
+        //create non-admin type user (for token use)
+        $nonAdminData = [
+            'name' => 'User Non Admin',
+            'email' =>  'non-admin@mail.com',
+            'password' => 'secret!',
+            'role' => 'non-admin'
+        ];
+        $nonAdmin =  $this->userRepo->create($nonAdminData);
+
+        $this->createdNonAdminId = $nonAdmin->id;
+        $this->nonAdminToken = $nonAdmin->api_token;
+
     }
 
     /** @test */
@@ -51,7 +70,6 @@ class UserTest extends TestCase
 
         //delete created users
         $content = $response->decodeResponseJson();
-       // $this->userRepo->delete($admin->id);
         $this->userRepo->delete($content['data']['id']);
 
         $response->assertStatus(201)
@@ -66,30 +84,18 @@ class UserTest extends TestCase
 
     /** @test */
     public function create_admin_role_from_non_admin_user()
-    {
-        //create non-admin type user
-        $nonAdminData = [
-            'name' => 'User Tester',
-            'email' =>  'non-admin@mail.com',
-            'password' => 'secret!',
-            'role' => 'non-admin'
-        ];
-        $nonAdmin =  $this->userRepo->create($nonAdminData);
-       
+    {      
         $data = [
             'name' => 'User Tester',
             'email' =>  'create-admin@mail.com',
             'password' => 'secret!',
             'role' => 'admin',
-            'api_token' =>  $nonAdmin->api_token
+            'api_token' => $this->nonAdminToken 
         ];
 
         $response = $this->withHeaders([
             'Accept' => 'application/json',
         ])->json('POST', '/api/user-create', $data);
-
-        //delete created user
-        $this->userRepo->delete($nonAdmin->id);
 
         $response->assertStatus(403)
                         ->assertJson([
@@ -105,13 +111,13 @@ class UserTest extends TestCase
     /** @test */
     public function update_user_successfully(): void
     {
-        //update user
         $updateData = [
             'name' => 'User Update',
             'email' =>  'update@mail.com',
             'role' => 'admin',
             'api_token' =>  $this->adminToken
         ];
+
         $responseUpdate = $this->withHeaders([
             'Accept' => 'application/json',
         ])->json('PUT', '/api/user-update/'.$this->createdAdminId.'', $updateData);
@@ -127,30 +133,42 @@ class UserTest extends TestCase
     }
 
     /** @test */
-    public function update_user_using_other_users_account(): void
+    public function update_user_successfully_using_admin_account(): void
     {
-        //create non-admin type user
-        $nonAdminData = [
-            'name' => 'User Tester',
-            'email' =>  'non-admin@mail.com',
-            'password' => 'secret!',
-            'role' => 'non-admin'
-        ];
-        $nonAdmin =  $this->userRepo->create($nonAdminData);
-
-        //update user
         $updateData = [
             'name' => 'User Update',
             'email' =>  'update@mail.com',
             'role' => 'admin',
-            'api_token' =>  $nonAdmin->api_token
+            'api_token' =>  $this->adminToken
         ];
+
+        $responseUpdate = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->json('PUT', '/api/user-update/'.$this->createdNonAdminId.'', $updateData);
+
+        $responseUpdate->assertStatus(201)
+                                ->assertJson([
+                                    "data" => [
+                                        "name"=> "User Update",
+                                        "email"=> "update@mail.com",
+                                        "role"=> "admin",
+                                    ]
+                                ]);
+    }
+
+    /** @test */
+    public function update_user_using_other_users_account(): void
+    {
+        $updateData = [
+            'name' => 'User Update',
+            'email' =>  'update@mail.com',
+            'role' => 'admin',
+            'api_token' =>  $this->nonAdminToken 
+        ];
+
         $responseUpdate = $this->withHeaders([
             'Accept' => 'application/json',
         ])->json('PUT', '/api/user-update/'.$this->createdAdminId.'', $updateData);
-
-        //delete created user
-        $this->userRepo->delete($nonAdmin->id);
 
         $responseUpdate->assertStatus(403)
                                 ->assertJson([
@@ -177,7 +195,7 @@ class UserTest extends TestCase
         $responseShow->assertStatus(201)
                                 ->assertJson([
                                     "data" => [
-                                        "name" => "User Tester",
+                                        "name" => "User Admin",
                                         "email" => "admin@mail.com",
                                         "role" => "admin"
                                     ]
@@ -185,27 +203,36 @@ class UserTest extends TestCase
     }
 
     /** @test */
+    public function show_user_successfully_using_admin_account(): void
+    {
+        $showData = [
+            'api_token' => $this->adminToken
+        ];
+
+        $responseShow = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->json('GET', '/api/user/'.$this->createdNonAdminId.'', $showData);
+
+        $responseShow->assertStatus(201)
+                                ->assertJson([
+                                    "data" => [
+                                        "name" => "User Non Admin",
+                                        "email" => "non-admin@mail.com",
+                                        "role" => "non-admin"
+                                    ]
+                                ]);
+    }
+
+    /** @test */
     public function show_user_using_other_users_account(): void
     {
-        //create non-admin type user
-        $nonAdminData = [
-            'name' => 'User Tester',
-            'email' =>  'non-admin@mail.com',
-            'password' => 'secret!',
-            'role' => 'non-admin'
-        ];
-        $nonAdmin =  $this->userRepo->create($nonAdminData);
-
         $showData = [
-            'api_token' => $nonAdmin->api_token
+            'api_token' => $this->nonAdminToken
         ];
 
         $responseShow = $this->withHeaders([
             'Accept' => 'application/json',
         ])->json('GET', '/api/user/'.$this->createdAdminId.'', $showData);
-
-        //delete created user
-        $this->userRepo->delete($nonAdmin->id);
 
         $responseShow->assertStatus(403)
                                 ->assertJson([
@@ -221,22 +248,30 @@ class UserTest extends TestCase
     /** @test */
     public function delete_user_successfully(): void
     {
-        //create non-admin type user
-        $nonAdminData = [
-            'name' => 'User Tester',
-            'email' =>  'non-admin@mail.com',
-            'password' => 'secret!',
-            'role' => 'non-admin'
-        ];
-        $nonAdmin =  $this->userRepo->create($nonAdminData);
-
         $deleteData = [
-            'api_token' => $nonAdmin->api_token
+            'api_token' => $this->nonAdminToken
         ];
 
         $responseDelete = $this->withHeaders([
             'Accept' => 'application/json',
-        ])->json('DELETE', '/api/user-delete/'.$nonAdmin->id.'', $deleteData);
+        ])->json('DELETE', '/api/user-delete/'.$this->createdNonAdminId.'', $deleteData);
+
+        $responseDelete->assertStatus(200)
+                                ->assertJson([
+                                    "message" => "User successfully deleted"
+                                ]);
+    }
+
+    /** @test */
+    public function delete_user_successfully_using_admin_account(): void
+    {
+        $deleteData = [
+            'api_token' => $this->adminToken
+        ];
+
+        $responseDelete = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->json('DELETE', '/api/user-delete/'.$this->createdNonAdminId.'', $deleteData);
 
         $responseDelete->assertStatus(200)
                                 ->assertJson([
@@ -247,17 +282,8 @@ class UserTest extends TestCase
     /** @test */
     public function delete_user_using_other_users_account(): void
     {
-        //create non-admin type user
-        $nonAdminData = [
-            'name' => 'User Tester',
-            'email' =>  'non-admin@mail.com',
-            'password' => 'secret!',
-            'role' => 'non-admin'
-        ];
-        $nonAdmin =  $this->userRepo->create($nonAdminData);
-
         $deleteData = [
-            'api_token' => $nonAdmin->api_token
+            'api_token' => $this->nonAdminToken
         ];
 
         $responseDelete = $this->withHeaders([
@@ -277,7 +303,8 @@ class UserTest extends TestCase
 
     public function tearDown()
     {
-         $this->userRepo->delete($this->createdAdminId);
+        $this->userRepo->delete($this->createdAdminId);
+        $this->userRepo->delete($this->createdNonAdminId); 
     }
 
 }
