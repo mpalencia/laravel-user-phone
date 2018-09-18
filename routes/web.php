@@ -11,8 +11,4 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::post('login', 'ClientController@store')->name('login');
+Route::get('/', 'HomeController@index');
