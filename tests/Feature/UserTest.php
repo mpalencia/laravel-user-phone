@@ -20,7 +20,7 @@ class UserTest extends TestCase
         parent::setUp();
         $this->userRepo = new \App\Repositories\UserRepository(new User);
 
-        //create admin type user
+        //create admin type user (for token use)
         $adminData = [
             'name' => 'User Tester',
             'email' =>  'admin@mail.com',
@@ -31,7 +31,6 @@ class UserTest extends TestCase
 
         $this->createdAdminId = $admin->id;
         $this->adminToken = $admin->api_token;
-
     }
 
     /** @test */
@@ -69,13 +68,13 @@ class UserTest extends TestCase
     public function create_admin_role_from_non_admin_user()
     {
         //create non-admin type user
-        $adminData = [
+        $nonAdminData = [
             'name' => 'User Tester',
             'email' =>  'non-admin@mail.com',
             'password' => 'secret!',
             'role' => 'non-admin'
         ];
-        $nonAdmin =  $this->userRepo->create($adminData);
+        $nonAdmin =  $this->userRepo->create($nonAdminData);
        
         $data = [
             'name' => 'User Tester',
@@ -127,7 +126,154 @@ class UserTest extends TestCase
                                 ]);
     }
 
+    /** @test */
+    public function update_user_using_other_users_account(): void
+    {
+        //create non-admin type user
+        $nonAdminData = [
+            'name' => 'User Tester',
+            'email' =>  'non-admin@mail.com',
+            'password' => 'secret!',
+            'role' => 'non-admin'
+        ];
+        $nonAdmin =  $this->userRepo->create($nonAdminData);
 
+        //update user
+        $updateData = [
+            'name' => 'User Update',
+            'email' =>  'update@mail.com',
+            'role' => 'admin',
+            'api_token' =>  $nonAdmin->api_token
+        ];
+        $responseUpdate = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->json('PUT', '/api/user-update/'.$this->createdAdminId.'', $updateData);
+
+        //delete created user
+        $this->userRepo->delete($nonAdmin->id);
+
+        $responseUpdate->assertStatus(403)
+                                ->assertJson([
+                                    "message" => "Unauthorized user.",
+                                    "error"=> [
+                                        "api_token" =>[
+                                            "Invalid role."
+                                        ]
+                                    ]
+                                ]);
+    }
+
+    /** @test */
+    public function show_user_successfully(): void
+    {
+        $showData = [
+            'api_token' => $this->adminToken
+        ];
+
+        $responseShow = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->json('GET', '/api/user/'.$this->createdAdminId.'', $showData);
+
+        $responseShow->assertStatus(201)
+                                ->assertJson([
+                                    "data" => [
+                                        "name" => "User Tester",
+                                        "email" => "admin@mail.com",
+                                        "role" => "admin"
+                                    ]
+                                ]);
+    }
+
+    /** @test */
+    public function show_user_using_other_users_account(): void
+    {
+        //create non-admin type user
+        $nonAdminData = [
+            'name' => 'User Tester',
+            'email' =>  'non-admin@mail.com',
+            'password' => 'secret!',
+            'role' => 'non-admin'
+        ];
+        $nonAdmin =  $this->userRepo->create($nonAdminData);
+
+        $showData = [
+            'api_token' => $nonAdmin->api_token
+        ];
+
+        $responseShow = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->json('GET', '/api/user/'.$this->createdAdminId.'', $showData);
+
+        //delete created user
+        $this->userRepo->delete($nonAdmin->id);
+
+        $responseShow->assertStatus(403)
+                                ->assertJson([
+                                    "message" => "Unauthorized user.",
+                                    "error" => [
+                                        "api_token" => [
+                                            "Invalid token."
+                                        ]
+                                    ]
+                                ]);
+    }
+
+    /** @test */
+    public function delete_user_successfully(): void
+    {
+        //create non-admin type user
+        $nonAdminData = [
+            'name' => 'User Tester',
+            'email' =>  'non-admin@mail.com',
+            'password' => 'secret!',
+            'role' => 'non-admin'
+        ];
+        $nonAdmin =  $this->userRepo->create($nonAdminData);
+
+        $deleteData = [
+            'api_token' => $nonAdmin->api_token
+        ];
+
+        $responseDelete = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->json('DELETE', '/api/user-delete/'.$nonAdmin->id.'', $deleteData);
+
+        $responseDelete->assertStatus(200)
+                                ->assertJson([
+                                    "message" => "User successfully deleted"
+                                ]);
+    }
+
+    /** @test */
+    public function delete_user_using_other_users_account(): void
+    {
+        //create non-admin type user
+        $nonAdminData = [
+            'name' => 'User Tester',
+            'email' =>  'non-admin@mail.com',
+            'password' => 'secret!',
+            'role' => 'non-admin'
+        ];
+        $nonAdmin =  $this->userRepo->create($nonAdminData);
+
+        $deleteData = [
+            'api_token' => $nonAdmin->api_token
+        ];
+
+        $responseDelete = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->json('DELETE', '/api/user-delete/'.$this->createdAdminId.'', $deleteData);
+
+        $responseDelete->assertStatus(403)
+                                ->assertJson([
+                                    "message" => "Unauthorized user.",
+                                    "error" => [
+                                        "api_token" => [
+                                            "Invalid token."
+                                        ]
+                                    ]
+                                ]);
+    }
 
     public function tearDown()
     {

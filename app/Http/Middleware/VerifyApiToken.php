@@ -100,7 +100,7 @@ class VerifyApiToken
                     }
                     $userDetails = $this->user->show($userId);
                     if($request->role == 'admin' && $user['role'] == 'non-admin') {
-                        $error = ['message'=>'Only admin type user can create admin role.', 'error' => ['api_token' => ['Invalid role.']]];
+                        $error = ['message'=>'Unauthorized user.', 'error' => ['api_token' => ['Invalid role.']]];
                         return response()->json($error, 403);  
                     }
                     if($userDetails['id'] != $user['id']) {

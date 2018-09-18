@@ -101,7 +101,7 @@ class UserController extends Controller
      * @param string $id
      * @return Illuminate\Http\JsonResponse
      */
-    public function destroy(Request $request, $id): JsonResponse
+    public function destroy($id): JsonResponse
     {
         try{
             // delete record

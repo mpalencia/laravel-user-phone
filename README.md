@@ -13,6 +13,7 @@ REST API with Package [Fractal](https://fractal.thephpleague.com/)
 - Users has 2 roles, admin and non-admin  
 - Admin type of user and authorize client are the only authorize to create new users  
 - Admin type of user can fully access the client's CRUD resources  
+- For this demo I just used the same DB, but on development we separate testing DB from development DB
 
 ## Built using  
 Laravel 5.7.3  
