@@ -1,25 +1,25 @@
 <?php
 
 use Faker\Generator as Faker;
-use App\Models\User;
+use App\Models\Client;
 
 /*
 |--------------------------------------------------------------------------
 | Model Factories
 |--------------------------------------------------------------------------
 |
-| This directory should contain each of the model factory definitions for
-| your application. Factories provide a convenient way to generate new
-| model instances for testing / seeding your application's database.
+| Here you may define all of your model factories. Model factories give
+| you a convenient way to create models for testing and seeding your
+| database. Just tell the factory how a default model should look.
 |
 */
 
-$factory->define(User::class, function (Faker $faker) {
+$factory->define(Client::class, function (Faker $faker) {
 	$email = $faker->unique()->safeEmail;
     return [
         'name' => $faker->name,
         'email' => $email,
-        'role' => 'non-admin',
+        'authorize' => 1,
         'password' => bcrypt(str_random(10)),
         'api_token' => bcrypt($email)
     ];

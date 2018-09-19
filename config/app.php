@@ -160,6 +160,15 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // https://github.com/spatie/laravel-fractal
+        Spatie\Fractal\FractalServiceProvider::class,
+
+        //https://github.com/propaganistas/laravel-phone
+        Propaganistas\LaravelPhone\PhoneServiceProvider::class,
+
+        // custom repository
+        App\Providers\RepositoryServiceProvider::class,
+
     ],
 
     /*
@@ -209,6 +218,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        'Fractal' => Spatie\Fractal\FractalFacade::class,
     ],
 
 ];
