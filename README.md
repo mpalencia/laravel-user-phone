@@ -1,5 +1,5 @@
 # laravel-user-phone
-Simple RESTful API which stores phone numbers of a user.
+Simple RESTful API which stores phone numbers of a user.  
   
 Phone number function is based on the [PHP port](https://github.com/giggsey/libphonenumber-for-php) of [Google's libphonenumber API](https://github.com/googlei18n/libphonenumber) by [giggsey](https://github.com/giggsey).  
   
@@ -22,10 +22,10 @@ Mysql 5.6
 Phpunit 7.3  
   
 ## Installation
-- Install Composer
-- Download the repository and unzip into your server
-- Change .env for database connection
-- Run <code>composer update</code>
+- Install Composer  
+- Download the repository and unzip into your server  
+- Change .env for database connection  
+- Run <code>composer update</code>  
 - Run <code>php artisan migrate</code>  
 - Run <code>db:seed</code>  
 - Run <code>php artisan serve</code>  
@@ -35,7 +35,7 @@ Phpunit 7.3
 To check list via terminal. Run <code>php artisan route:list</code>  
   
 * Get api_token via client registration or use super admin api_token (Run 'php artisan db:seed' to create super admin)  
-* On testing via Postman, please add on the header - key: Accept, value: application/json http://prntscr.com/kvfj71
+* On testing via Postman, please add on the header - key: Accept, value: application/json http://prntscr.com/kvfj71  
 
 // User  
 Create User : http://localhost:8000/api/user-create (POST)  
