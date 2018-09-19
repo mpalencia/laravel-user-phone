@@ -69,13 +69,13 @@ class UserTest extends TestCase
         $this->userRepo->delete($content['data']['id']);
 
         $response->assertStatus(201)
-                        ->assertJson([
-                            "data" => [
-                                "name"=> "User Tester",
-                                "email"=> "create@mail.com",
-                                "role"=> "admin",
-                            ]
-                        ]);
+                 ->assertJson([
+                    "data" => [
+                        "name"=> "User Tester",
+                        "email"=> "create@mail.com",
+                        "role"=> "admin",
+                    ]
+                 ]);
     }
 
     /** @test */
@@ -94,14 +94,14 @@ class UserTest extends TestCase
         ])->json('POST', '/api/user-create', $data);
 
         $response->assertStatus(403)
-                        ->assertJson([
-                            "message" => "Unauthorized user.",
-                            "error" => [
-                                "api_token" => [
-                                    "Invalid token."
-                                ]
-                            ]
-                        ]);
+                 ->assertJson([
+                    "message" => "Unauthorized user.",
+                    "error" => [
+                        "api_token" => [
+                            "Invalid token."
+                        ]
+                    ]
+                 ]);
     }
 
     /** @test */
@@ -119,13 +119,13 @@ class UserTest extends TestCase
         ])->json('PUT', '/api/user-update/'.$this->createdAdminId.'', $updateData);
 
         $responseUpdate->assertStatus(201)
-                                ->assertJson([
-                                    "data" => [
-                                        "name"=> "User Update",
-                                        "email"=> "update@mail.com",
-                                        "role"=> "admin",
-                                    ]
-                                ]);
+                       ->assertJson([
+                            "data" => [
+                                "name"=> "User Update",
+                                "email"=> "update@mail.com",
+                                "role"=> "admin",
+                            ]
+                       ]);
     }
 
     /** @test */
@@ -143,13 +143,13 @@ class UserTest extends TestCase
         ])->json('PUT', '/api/user-update/'.$this->createdNonAdminId.'', $updateData);
 
         $responseUpdate->assertStatus(201)
-                                ->assertJson([
-                                    "data" => [
-                                        "name"=> "User Update",
-                                        "email"=> "update@mail.com",
-                                        "role"=> "admin",
-                                    ]
-                                ]);
+                       ->assertJson([
+                            "data" => [
+                                "name"=> "User Update",
+                                "email"=> "update@mail.com",
+                                "role"=> "admin",
+                            ]
+                       ]);
     }
 
     /** @test */
@@ -167,14 +167,14 @@ class UserTest extends TestCase
         ])->json('PUT', '/api/user-update/'.$this->createdAdminId.'', $updateData);
 
         $responseUpdate->assertStatus(403)
-                                ->assertJson([
-                                    "message" => "Unauthorized user.",
-                                    "error"=> [
-                                        "api_token" =>[
-                                            "Invalid role."
-                                        ]
-                                    ]
-                                ]);
+                       ->assertJson([
+                            "message" => "Unauthorized user.",
+                            "error"=> [
+                                "api_token" =>[
+                                    "Invalid role."
+                                ]
+                            ]
+                       ]);
     }
 
     /** @test */
@@ -189,13 +189,13 @@ class UserTest extends TestCase
         ])->json('GET', '/api/user/'.$this->createdAdminId.'', $showData);
 
         $responseShow->assertStatus(201)
-                                ->assertJson([
-                                    "data" => [
-                                        "name" => "User Admin",
-                                        "email" => "admin@mail.com",
-                                        "role" => "admin"
-                                    ]
-                                ]);
+                     ->assertJson([
+                        "data" => [
+                            "name" => "User Admin",
+                            "email" => "admin@mail.com",
+                            "role" => "admin"
+                        ]
+                     ]);
     }
 
     /** @test */
@@ -210,13 +210,13 @@ class UserTest extends TestCase
         ])->json('GET', '/api/user/'.$this->createdNonAdminId.'', $showData);
 
         $responseShow->assertStatus(201)
-                                ->assertJson([
-                                    "data" => [
-                                        "name" => "User Non Admin",
-                                        "email" => "non-admin@mail.com",
-                                        "role" => "non-admin"
-                                    ]
-                                ]);
+                     ->assertJson([
+                        "data" => [
+                            "name" => "User Non Admin",
+                            "email" => "non-admin@mail.com",
+                            "role" => "non-admin"
+                        ]
+                     ]);
     }
 
     /** @test */
@@ -231,14 +231,14 @@ class UserTest extends TestCase
         ])->json('GET', '/api/user/'.$this->createdAdminId.'', $showData);
 
         $responseShow->assertStatus(403)
-                                ->assertJson([
-                                    "message" => "Unauthorized user.",
-                                    "error" => [
-                                        "api_token" => [
-                                            "Invalid token."
-                                        ]
-                                    ]
-                                ]);
+                     ->assertJson([
+                        "message" => "Unauthorized user.",
+                        "error" => [
+                            "api_token" => [
+                                "Invalid token."
+                            ]
+                        ]
+                     ]);
     }
 
     /** @test */
@@ -253,9 +253,9 @@ class UserTest extends TestCase
         ])->json('DELETE', '/api/user-delete/'.$this->createdNonAdminId.'', $deleteData);
 
         $responseDelete->assertStatus(200)
-                                ->assertJson([
-                                    "message" => "User successfully deleted"
-                                ]);
+                       ->assertJson([
+                            "message" => "User successfully deleted"
+                       ]);
     }
 
     /** @test */
@@ -270,9 +270,9 @@ class UserTest extends TestCase
         ])->json('DELETE', '/api/user-delete/'.$this->createdNonAdminId.'', $deleteData);
 
         $responseDelete->assertStatus(200)
-                                ->assertJson([
-                                    "message" => "User successfully deleted"
-                                ]);
+                       ->assertJson([
+                            "message" => "User successfully deleted"
+                       ]);
     }
 
     /** @test */
@@ -287,14 +287,14 @@ class UserTest extends TestCase
         ])->json('DELETE', '/api/user-delete/'.$this->createdAdminId.'', $deleteData);
 
         $responseDelete->assertStatus(403)
-                                ->assertJson([
-                                    "message" => "Unauthorized user.",
-                                    "error" => [
-                                        "api_token" => [
-                                            "Invalid token."
-                                        ]
-                                    ]
-                                ]);
+                       ->assertJson([
+                            "message" => "Unauthorized user.",
+                            "error" => [
+                                "api_token" => [
+                                    "Invalid token."
+                                ]
+                            ]
+                       ]);
     }
 
     public function tearDown()
