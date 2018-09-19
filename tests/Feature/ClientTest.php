@@ -71,13 +71,13 @@ class ClientTest extends TestCase
         $this->clientRepo->delete($content['data']['id']);
 
         $response->assertStatus(201)
-                        ->assertJson([
-                            "data" => [
-                                "name"=> "Create Client User",
-                                "email"=> "create-client@mail.com",
-                                "authorize"=> 0,
-                            ]
-                        ]);
+                    ->assertJson([
+                        "data" => [
+                            "name"=> "Create Client User",
+                            "email"=> "create-client@mail.com",
+                            "authorize"=> 0,
+                        ]
+                    ]);
     }
 
     /** @test */
@@ -95,13 +95,13 @@ class ClientTest extends TestCase
         ])->json('PUT', '/api/client-update/'.$this->createdClientId.'', $updateData);
 
         $responseUpdate->assertStatus(201)
-                                ->assertJson([
-                                    "data" => [
-                                        "name"=> "Client  Update",
-                                        "email"=> "client@mail.com",
-                                        "authorize"=> 0,
-                                    ]
-                                ]);
+                            ->assertJson([
+                                "data" => [
+                                    "name"=> "Client  Update",
+                                    "email"=> "client@mail.com",
+                                    "authorize"=> 0,
+                                ]
+                            ]);
     }
 
     /** @test */
@@ -119,13 +119,13 @@ class ClientTest extends TestCase
         ])->json('PUT', '/api/client-update/'.$this->createdClientId.'', $updateData);
 
         $responseUpdate->assertStatus(201)
-                                ->assertJson([
-                                    "data" => [
-                                        "name"=> "Client  Update",
-                                        "email"=> "client@mail.com",
-                                        "authorize"=> 0,
-                                    ]
-                                ]);
+                            ->assertJson([
+                                "data" => [
+                                    "name"=> "Client  Update",
+                                    "email"=> "client@mail.com",
+                                    "authorize"=> 0,
+                                ]
+                            ]);
     }
 
     /** @test */
@@ -154,14 +154,14 @@ class ClientTest extends TestCase
         $this->clientRepo->delete($client->id);
 
         $responseUpdate->assertStatus(403)
-                                ->assertJson([
-                                    "message" => "Unauthorized client.",
-                                    "error"=> [
-                                        "api_token" =>[
-                                            "Invalid token."
-                                        ]
+                            ->assertJson([
+                                "message" => "Unauthorized client.",
+                                "error"=> [
+                                    "api_token" =>[
+                                        "Invalid token."
                                     ]
-                                ]);
+                                ]
+                            ]);
     }
 
     /** @test */
@@ -176,13 +176,13 @@ class ClientTest extends TestCase
         ])->json('GET', '/api/client/'.$this->createdClientId.'', $showData);
 
         $responseShow->assertStatus(201)
-                                ->assertJson([
-                                    "data" => [
-                                        "name"=> "Client User",
-                                        "email"=> "client@mail.com",
-                                        "authorize"=> 0,
-                                    ]
-                                ]);
+                            ->assertJson([
+                                "data" => [
+                                    "name"=> "Client User",
+                                    "email"=> "client@mail.com",
+                                    "authorize"=> 0,
+                                ]
+                            ]);
     }
 
     /** @test */
@@ -197,13 +197,13 @@ class ClientTest extends TestCase
         ])->json('GET', '/api/client/'.$this->createdClientId.'', $showData);
 
         $responseShow->assertStatus(201)
-                                ->assertJson([
-                                    "data" => [
-                                        "name"=> "Client User",
-                                        "email"=> "client@mail.com",
-                                        "authorize"=> 0,
-                                    ]
-                                ]);
+                            ->assertJson([
+                                "data" => [
+                                    "name"=> "Client User",
+                                    "email"=> "client@mail.com",
+                                    "authorize"=> 0,
+                                ]
+                            ]);
     }
 
     /** @test */
@@ -230,14 +230,14 @@ class ClientTest extends TestCase
         $this->clientRepo->delete($client->id);
 
         $responseShow->assertStatus(403)
-                                ->assertJson([
-                                    "message" => "Unauthorized client.",
-                                    "error"=> [
-                                        "api_token" =>[
-                                            "Invalid token."
-                                        ]
+                            ->assertJson([
+                                "message" => "Unauthorized client.",
+                                "error"=> [
+                                    "api_token" =>[
+                                        "Invalid token."
                                     ]
-                                ]);
+                                ]
+                            ]);
     }
 
     /** @test */
@@ -252,9 +252,9 @@ class ClientTest extends TestCase
         ])->json('DELETE', '/api/client-delete/'.$this->createdClientId.'', $deleteData);
 
         $responseDelete->assertStatus(200)
-                                ->assertJson([
-                                    "message" => "Client successfully deleted"
-                                ]);
+                            ->assertJson([
+                                "message" => "Client successfully deleted"
+                            ]);
     }
 
     /** @test */
@@ -269,9 +269,9 @@ class ClientTest extends TestCase
         ])->json('DELETE', '/api/client-delete/'.$this->createdClientId.'', $deleteData);
 
         $responseDelete->assertStatus(200)
-                                ->assertJson([
-                                    "message" => "Client successfully deleted"
-                                ]);
+                            ->assertJson([
+                                "message" => "Client successfully deleted"
+                            ]);
     }
 
     /** @test */
@@ -297,14 +297,14 @@ class ClientTest extends TestCase
         $this->clientRepo->delete($client->id);
 
         $responseDelete->assertStatus(403)
-                                ->assertJson([
-                                    "message" => "Unauthorized client.",
-                                    "error" => [
-                                        "api_token" => [
-                                            "Invalid token."
-                                        ]
+                            ->assertJson([
+                                "message" => "Unauthorized client.",
+                                "error" => [
+                                    "api_token" => [
+                                        "Invalid token."
                                     ]
-                                ]);
+                                ]
+                            ]);
     }
 
     public function tearDown()
