@@ -70,12 +70,12 @@ class PhoneTest extends TestCase
         $this->userPhoneRepo->delete($content['data']['id']);
 
         $response->assertStatus(201)
-                ->assertJson([
+                 ->assertJson([
                     "data" => [
                         "user_id" => $this->createdAdminId,
                         "phone_number" => "09174669111"
                     ]
-                ]);
+                 ]);
     }
 
     /** @test */
@@ -92,14 +92,14 @@ class PhoneTest extends TestCase
         ])->json('POST', '/api/phone-create', $createData);
 
         $response->assertStatus(422)
-                ->assertJson([
+                 ->assertJson([
                         "message" => "The given data was invalid.",
                         "errors" => [
                             "phone_number" => [
                                 "phone_number is already used"
                             ]
                         ]
-                ]); 
+                 ]); 
     }
 
     /** @test */
@@ -116,14 +116,14 @@ class PhoneTest extends TestCase
         ])->json('POST', '/api/phone-create', $createData);
 
         $response->assertStatus(422)
-                ->assertJson([
+                 ->assertJson([
                     "message" => "The given data was invalid.",
                     "errors" => [
                         "phone_number" => [
                             "The phone number field contains an invalid number. Please use a Philippine number."
                         ]
                     ]
-                ]);
+                 ]);
     }
 
     /** @test */
@@ -139,12 +139,12 @@ class PhoneTest extends TestCase
         ])->json('PUT', '/api/phone-update/'.$this->createdUserPhoneId.'', $updateData);
 
         $responseUpdate->assertStatus(201)
-                        ->assertJson([
+                       ->assertJson([
                             "data" => [
                                 "user_id" => $this->createdAdminId,
                                 "phone_number" => "09174669111"
                             ]
-                        ]);
+                       ]);
     }
 
     /** @test */
@@ -160,12 +160,12 @@ class PhoneTest extends TestCase
         ])->json('PUT', '/api/phone-update/'.$this->createdUserPhoneId.'', $updateData);
 
         $responseUpdate->assertStatus(201)
-                        ->assertJson([
+                       ->assertJson([
                             "data" => [
                                 "user_id" => $this->createdAdminId,
                                 "phone_number" => "09174669111"
                             ]
-                        ]);
+                       ]);
     }
 
     /** @test */
@@ -192,14 +192,14 @@ class PhoneTest extends TestCase
         $this->userRepo->delete($nonAdmin->id);
 
         $responseUpdate->assertStatus(403)
-                        ->assertJson([
+                       ->assertJson([
                             "message" => "Unauthorized process.",
                             "error"=> [
                                 "api_token" =>[
                                     "Invalid token."
                                 ]
                             ]
-                        ]);
+                       ]);
     }
 
     /** @test */
@@ -214,12 +214,12 @@ class PhoneTest extends TestCase
         ])->json('GET', '/api/phone/'.$this->createdUserPhoneId.'', $showData);
 
         $responseShow->assertStatus(201)
-                        ->assertJson([
-                            "data" => [
-                                "user_id" => $this->createdAdminId,
-                                "phone_number" => "09174669444"
-                            ]
-                        ]);
+                     ->assertJson([
+                        "data" => [
+                            "user_id" => $this->createdAdminId,
+                            "phone_number" => "09174669444"
+                        ]
+                     ]);
     }
 
     /** @test */
@@ -234,12 +234,12 @@ class PhoneTest extends TestCase
         ])->json('GET', '/api/phone/'.$this->createdUserPhoneId.'', $showData);
 
         $responseShow->assertStatus(201)
-                        ->assertJson([
-                            "data" => [
-                                "user_id" => $this->createdAdminId,
-                                "phone_number" => "09174669444"
-                            ]
-                        ]);
+                     ->assertJson([
+                        "data" => [
+                            "user_id" => $this->createdAdminId,
+                            "phone_number" => "09174669444"
+                        ]
+                     ]);
     }
 
     /** @test */
@@ -265,14 +265,14 @@ class PhoneTest extends TestCase
         $this->userRepo->delete($nonAdmin->id);
 
         $responseShow->assertStatus(403)
-                        ->assertJson([
-                            "message" => "Unauthorized process.",
-                            "error"=> [
-                                "api_token" =>[
-                                    "Invalid token."
-                                ]
+                     ->assertJson([
+                        "message" => "Unauthorized process.",
+                        "error"=> [
+                            "api_token" =>[
+                                "Invalid token."
                             ]
-                        ]);
+                        ]
+                     ]);
     }
 
     /** @test */
@@ -304,17 +304,17 @@ class PhoneTest extends TestCase
         }
 
         $responseShow->assertStatus(201)
-                ->assertJson([
-                    "meta"=> [
-                        "pagination" => [
-                            "total" => 12,
-                            "count" => 10,
-                            "per_page" => 10,
-                            "current_page" => 1,
-                            "total_pages" =>2,
+                     ->assertJson([
+                        "meta"=> [
+                            "pagination" => [
+                                "total" => 12,
+                                "count" => 10,
+                                "per_page" => 10,
+                                "current_page" => 1,
+                                "total_pages" =>2,
+                            ]
                         ]
-                    ]
-                ]);
+                     ]);
     }
 
     /** @test */
@@ -346,17 +346,17 @@ class PhoneTest extends TestCase
         }
 
         $responseShow->assertStatus(201)
-                ->assertJson([
-                    "meta"=> [
-                        "pagination" => [
-                            "total" => 12,
-                            "count" => 2,
-                            "per_page" => 10,
-                            "current_page" => 2,
-                            "total_pages" =>2,
+                     ->assertJson([
+                        "meta"=> [
+                            "pagination" => [
+                                "total" => 12,
+                                "count" => 2,
+                                "per_page" => 10,
+                                "current_page" => 2,
+                                "total_pages" =>2,
+                            ]
                         ]
-                    ]
-                ]);
+                     ]);
     }
 
     // /** @test */
@@ -371,9 +371,9 @@ class PhoneTest extends TestCase
         ])->json('DELETE', '/api/phone-delete/'.$this->createdUserPhoneId.'', $deleteData);
 
         $responseDelete->assertStatus(200)
-                        ->assertJson([
+                       ->assertJson([
                             "message" => "User's phone number successfully deleted"
-                        ]);
+                       ]);
     }
 
     /** @test */
@@ -388,9 +388,9 @@ class PhoneTest extends TestCase
         ])->json('DELETE', '/api/phone-delete/'.$this->createdUserPhoneId.'', $deleteData);
 
         $responseDelete->assertStatus(200)
-                            ->assertJson([
-                                "message" => "User's phone number successfully deleted"
-                            ]);
+                       ->assertJson([
+                            "message" => "User's phone number successfully deleted"
+                       ]);
     }
 
     /** @test */
@@ -416,14 +416,14 @@ class PhoneTest extends TestCase
         $this->userRepo->delete($nonAdmin->id);
 
         $responseDelete->assertStatus(403)
-                        ->assertJson([
+                       ->assertJson([
                             "message" => "Unauthorized process.",
                             "error" => [
                                 "api_token" => [
                                     "Invalid token."
                                 ]
                             ]
-                        ]);
+                       ]);
     }
 
     public function tearDown()
