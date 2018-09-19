@@ -82,7 +82,14 @@ class VerifyApiToken
                     } else if($client['authorize'] === 0) {
                         $error = ['message'=>'Unauthorized client.', 'error' => ['api_token' => ['Invalid token.']]];
                         return response()->json($error, 403);    
-                    } else {
+                    } else if($client['authorize'] === 1) {
+                        if($request->role == 'admin') {
+                            $error = ['message'=>'Only admin type user can create admin role.', 'error' => ['api_token' => ['Invalid role.']]];
+                            return response()->json($error, 403);  
+                        } else {
+                            return $next($request);
+                        }
+                    }else {
                         $error = ['message'=>'Token does not exist.', 'error' => ['api_token' => ['Invalid token.']]];
                         return response()->json($error, 404);  
                     }

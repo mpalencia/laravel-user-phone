@@ -54,7 +54,7 @@ class PhoneTest extends TestCase
     /** @test */
     public function create_user_phone_successfully(): void
     {
-        //create user
+        //create user phone
         $createData = [
             'api_token' => $this->adminToken,
             'phone_number' =>  '09174669111',
@@ -74,6 +74,54 @@ class PhoneTest extends TestCase
                     "data" => [
                         "user_id" => $this->createdAdminId,
                         "phone_number" => "09174669111"
+                    ]
+                ]);
+    }
+
+    /** @test */
+    public function create_duplicate_user_phone(): void
+    {
+        //create user phone
+        $createData = [
+            'api_token' => $this->adminToken,
+            'phone_number' =>  '09174669444',
+        ];
+
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->json('POST', '/api/phone-create', $createData);
+
+        $response->assertStatus(422)
+                ->assertJson([
+                        "message" => "The given data was invalid.",
+                        "errors" => [
+                            "phone_number" => [
+                                "phone_number is already used"
+                            ]
+                        ]
+                ]); 
+    }
+
+    /** @test */
+    public function create_user_phone_doesnt_belong_to_philippines(): void
+    {
+        //create user phone
+        $createData = [
+            'api_token' => $this->adminToken,
+            'phone_number' =>  '15417543010',
+        ];
+
+        $response = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->json('POST', '/api/phone-create', $createData);
+
+        $response->assertStatus(422)
+                ->assertJson([
+                    "message" => "The given data was invalid.",
+                    "errors" => [
+                        "phone_number" => [
+                            "The phone number field contains an invalid number. Please use a Philippine number."
+                        ]
                     ]
                 ]);
     }
@@ -225,6 +273,90 @@ class PhoneTest extends TestCase
                                 ]
                             ]
                         ]);
+    }
+
+    /** @test */
+    public function show_user_phone_10_reponse(): void
+    {
+        $created10phone = array();
+        for ($i=0; $i < 11; $i++) { 
+            $userPhoneData = [
+                'api_token' => $this->adminToken,
+                'phone_number' => '0917466943'.$i.'',
+            ];
+            $userPhone =  $this->userPhoneRepo->create($userPhoneData);
+
+            $created10phone[$i] = $userPhone->id;
+        }
+
+        $showData = [
+            'api_token' => $this->adminToken,
+            'page' => 1
+        ];
+
+        $responseShow = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->json('GET', '/api/phones/'.$this->createdAdminId.'', $showData);
+
+        //delete created user phones
+        foreach ($created10phone as $key => $value) {
+            $this->userPhoneRepo->delete($value);
+        }
+
+        $responseShow->assertStatus(201)
+                ->assertJson([
+                    "meta"=> [
+                        "pagination" => [
+                            "total" => 12,
+                            "count" => 10,
+                            "per_page" => 10,
+                            "current_page" => 1,
+                            "total_pages" =>2,
+                        ]
+                    ]
+                ]);
+    }
+
+    /** @test */
+    public function show_user_phone_10_reponse_page_2(): void
+    {
+        $created10phone = array();
+        for ($i=0; $i < 11; $i++) { 
+            $userPhoneData = [
+                'api_token' => $this->adminToken,
+                'phone_number' => '0917466943'.$i.'',
+            ];
+            $userPhone =  $this->userPhoneRepo->create($userPhoneData);
+
+            $created10phone[$i] = $userPhone->id;
+        }
+
+        $showData = [
+            'api_token' => $this->adminToken,
+            'page' => 2
+        ];
+
+        $responseShow = $this->withHeaders([
+            'Accept' => 'application/json',
+        ])->json('GET', '/api/phones/'.$this->createdAdminId.'', $showData);
+
+        //delete created user phones
+        foreach ($created10phone as $key => $value) {
+            $this->userPhoneRepo->delete($value);
+        }
+
+        $responseShow->assertStatus(201)
+                ->assertJson([
+                    "meta"=> [
+                        "pagination" => [
+                            "total" => 12,
+                            "count" => 2,
+                            "per_page" => 10,
+                            "current_page" => 2,
+                            "total_pages" =>2,
+                        ]
+                    ]
+                ]);
     }
 
     // /** @test */
