@@ -29,7 +29,7 @@ Phpunit 7.3
 - Change .env for database connection  
 - Run <code>composer update</code>  
 - Run <code>php artisan migrate</code>  
-- Run <code>db:seed</code>  
+- Run <code>php artisan db:seed</code>  
 - Run <code>php artisan serve</code>  
   
 ## Route List
